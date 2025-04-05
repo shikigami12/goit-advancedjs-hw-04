@@ -110,4 +110,6 @@ class ImageSearch {
 }
 
 const search = new ImageSearch();
-await search.init();
+search.init().catch(error => {
+  console.error(error);
+});
