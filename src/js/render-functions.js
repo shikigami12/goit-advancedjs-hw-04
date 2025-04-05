@@ -77,8 +77,6 @@ class GalleryRenderer {
     }
 
     this._galleryElement = this._parentElement.querySelector(`.${gallerySelector}`);
-    this._moreButton = this._parentElement.querySelector('.load-more');
-    this._noMoreText = this._parentElement.querySelector('.no-more');
   }
 
   /**
@@ -88,28 +86,6 @@ class GalleryRenderer {
   appendImages(images) {
     const listItems = images.map(image => this._generateListItem(new PixabayImage(image)));
     this._galleryElement.append(...listItems);
-  }
-
-  /**
-   * Adds a "Load more" button to the gallery.
-   * @param page
-   * @param totalHits
-   * @param callback
-   */
-  addMoreButton(page, totalHits, callback) {
-    if (totalHits > 0 && totalHits > page * 15) {
-      if (!this._noMoreText.classList.contains('no-more')) {
-        this._noMoreText.classList.add('hidden');
-      }
-      this._moreButton.classList.remove('hidden');
-      this._moreButton.addEventListener('click', callback);
-    } else {
-      this._noMoreText.classList.remove('hidden');
-      if (!this._moreButton.classList.contains('hidden')) {
-        this._moreButton.classList.add('hidden');
-      }
-      this._moreButton.removeEventListener('click', callback);
-    }
   }
 
   /**

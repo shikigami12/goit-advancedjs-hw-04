@@ -24,6 +24,8 @@ class ImageSearch {
     this._page = 1;
     this._loader = document.querySelector('.loader');
     this._query = null;
+    this._loadMoreButton = document.querySelector('.load-more');
+    this._noMoreText = document.querySelector('.no-more');
   }
 
   /**
@@ -32,6 +34,7 @@ class ImageSearch {
   async init() {
     this._searchForm.addEventListener('submit', async (event) => {
       event.preventDefault();
+      this._resetPaging();
       const query = event.target.querySelector('input[name="searchQuery"]').value;
       if (!query) {
         iziToast.error({
@@ -41,15 +44,15 @@ class ImageSearch {
       }
 
       this._query = query;
-      this._resetPaging();
       this._searchForm.reset();
       this._galleryRenderer.clear();
-
       await this._onSearch();
     });
+    document.querySelector('.load-more').addEventListener('click', this._loadMore.bind(this));
   }
 
   _resetPaging() {
+    document.querySelector('.load-more').removeEventListener('click', this._loadMore.bind(this));
     this._page = 1;
   }
 
@@ -71,9 +74,22 @@ class ImageSearch {
     }
 
     this._galleryRenderer.appendImages(response.hits);
-    this._galleryRenderer.addMoreButton(this._page, response.totalHits, this._loadMore.bind(this));
     this._lightbox.refresh();
-
+    if (response.totalHits > 0 && response.totalHits > this._page * 15) {
+      if(this._loadMoreButton.classList.contains('hidden')) {
+        this._loadMoreButton.classList.toggle('hidden');
+      }
+      if(!this._noMoreText.classList.contains('hidden')) {
+        this._noMoreText.classList.toggle('hidden');
+      }
+    } else {
+      if(!this._loadMoreButton.classList.contains('hidden')) {
+        this._loadMoreButton.classList.toggle('hidden');
+      }
+      if(this._noMoreText.classList.contains('hidden')) {
+        this._noMoreText.classList.toggle('hidden');
+      }
+    }
   }
 
   /**
