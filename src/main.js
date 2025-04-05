@@ -71,9 +71,7 @@ class ImageSearch {
     }
 
     this._galleryRenderer.appendImages(response.hits);
-
     this._galleryRenderer.addMoreButton(this._page, response.totalHits, this._loadMore.bind(this));
-    this._galleryRenderer.render();
     this._lightbox.refresh();
 
   }
@@ -94,7 +92,8 @@ class ImageSearch {
    * @returns {Promise<void>}
    * @private
    */
-  async _loadMore() {
+  async _loadMore(event) {
+    event.preventDefault();
     this._page++;
     await this._onSearch(this._query);
     // Scroll to the gallery element after loading new images

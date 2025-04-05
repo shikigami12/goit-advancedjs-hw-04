@@ -164,6 +164,10 @@ ul.gallery li a {
   text-decoration: none;
 }
 
+.hidden {
+  display: none;
+}
+
 .load-more {
   color: #FFF;
   font-family: Montserrat, sans-serif;

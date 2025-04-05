@@ -76,17 +76,9 @@ class GalleryRenderer {
       throw new Error(`Parent element ${parentElement} not found`);
     }
 
-    // if parent element already has a child with the same class, use that
-    const existingGallery = this._parentElement.querySelector(`.${gallerySelector}`);
-    if (existingGallery) {
-      this._galleryElement = existingGallery;
-      return;
-    }
-
-    // create a new gallery element
-    this._galleryElement = document.createElement('ul');
-    this._galleryElement.classList.add(gallerySelector);
-    this._moreButton = null;
+    this._galleryElement = this._parentElement.querySelector(`.${gallerySelector}`);
+    this._moreButton = this._parentElement.querySelector('.load-more');
+    this._noMoreText = this._parentElement.querySelector('.no-more');
   }
 
   /**
@@ -105,21 +97,18 @@ class GalleryRenderer {
    * @param callback
    */
   addMoreButton(page, totalHits, callback) {
-    // Remove existing button if it exists
-    if (this._parentElement.contains(this._moreButton)) {
-      this._parentElement.removeChild(this._moreButton);
-    }
-
     if (totalHits > 0 && totalHits > page * 15) {
-      this._moreButton = document.createElement('button');
-      this._moreButton.textContent = 'Load more';
-      this._moreButton.classList.add('load-more');
+      if (!this._noMoreText.classList.contains('no-more')) {
+        this._noMoreText.classList.add('hidden');
+      }
+      this._moreButton.classList.remove('hidden');
       this._moreButton.addEventListener('click', callback);
-    }
-    else {
-      this._moreButton = document.createElement('p');
-      this._moreButton.textContent = 'We\'re sorry, but you\'ve reached the end of search results.';
-      this._moreButton.classList.add('no-more');
+    } else {
+      this._noMoreText.classList.remove('hidden');
+      if (!this._moreButton.classList.contains('hidden')) {
+        this._moreButton.classList.add('hidden');
+      }
+      this._moreButton.removeEventListener('click', callback);
     }
   }
 
@@ -174,28 +163,10 @@ class GalleryRenderer {
   }
 
   /**
-   * Renders the gallery.
-   */
-  render() {
-    if (!this._parentElement) {
-      throw new Error(`Parent element ${this._parentElement} not found`);
-    }
-    // Append the gallery to the parent element if it doesn't already exist
-    if (!this._parentElement.contains(this._galleryElement)) {
-      this._parentElement.appendChild(this._galleryElement);
-    }
-
-    if (this._moreButton) {
-      this._parentElement.appendChild(this._moreButton);
-    }
-  }
-
-  /**
    * Clears the gallery.
    */
   clear() {
     this._galleryElement.innerHTML = '';
-    this._parentElement.innerHTML = '';
   }
 }
 
