@@ -14,6 +14,8 @@ class RequestConfig {
       image_type: 'photo',
       orientation: 'horizontal',
       safesearch: true,
+      per_page: 15,
+      page: 1,
     };
   }
 
@@ -31,6 +33,25 @@ class RequestConfig {
    */
   setQuery(query) {
     this.params.q = query;
+  }
+
+  /**
+   * Sets the page number for pagination
+   * @param {number} page - Page number
+   */
+  setPage(page) {
+    this.params.page = page;
+  }
+}
+
+/**
+ * Class representing a single image from Pixabay
+ */
+class ResponseModel {
+  constructor(response) {
+    this.hits = response.hits;
+    this.total = response.total;
+    this.totalHits = response.totalHits;
   }
 }
 
@@ -50,14 +71,17 @@ class PixabayApi {
   /**
    * Fetches images matching the provided query
    * @param {string} query - Search term
-   * @returns {Promise<Array>} - Promise resolving to array of image objects
+   * @param {number} page - Page number for pagination
+   * @returns {Promise<ResponseModel>} - Promise resolving to array of image objects
    */
-  fetchImages(query) {
+  async fetchImages(query, page = 1) {
     const config = new RequestConfig();
     config.setApiKey(this.apiKey);
     config.setQuery(query);
+    config.setPage(page);
 
-    return this._get('', { params: config.params });
+    const response = await this._get('', config);
+    return new ResponseModel(response);
   }
 
   /**
@@ -69,7 +93,7 @@ class PixabayApi {
    */
   _get(url, config) {
     return axios.get(url, config)
-      .then(response => response.data.hits || response.data)
+      .then(response => response.data)
       .catch(error => this._onError(error, url, config));
   }
 

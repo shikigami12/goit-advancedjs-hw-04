@@ -86,13 +86,50 @@ class GalleryRenderer {
     // create a new gallery element
     this._galleryElement = document.createElement('ul');
     this._galleryElement.classList.add(gallerySelector);
+    this._moreButton = null;
   }
 
   /**
-   * Adds an image to the gallery.
-   * @param {PixabayImage} image - The image to add.
+   * Appends images to the gallery.
+   * @param images
    */
-  addImage(image) {
+  appendImages(images) {
+    const listItems = images.map(image => this._generateListItem(new PixabayImage(image)));
+    this._galleryElement.append(...listItems);
+  }
+
+  /**
+   * Adds a "Load more" button to the gallery.
+   * @param page
+   * @param totalHits
+   * @param callback
+   */
+  addMoreButton(page, totalHits, callback) {
+    // Remove existing button if it exists
+    if (this._parentElement.contains(this._moreButton)) {
+      this._parentElement.removeChild(this._moreButton);
+    }
+
+    if (totalHits > 0 && totalHits > page * 15) {
+      this._moreButton = document.createElement('button');
+      this._moreButton.textContent = 'Load more';
+      this._moreButton.classList.add('load-more');
+      this._moreButton.addEventListener('click', callback);
+    }
+    else {
+      this._moreButton = document.createElement('p');
+      this._moreButton.textContent = 'We\'re sorry, but you\'ve reached the end of search results.';
+      this._moreButton.classList.add('no-more');
+    }
+  }
+
+  /**
+   * Generates a list item for the gallery.
+   * @param image
+   * @returns {HTMLLIElement}
+   * @private
+   */
+  _generateListItem(image) {
     const imageRenderer = new ImageRenderer();
     imageRenderer.setImage(image);
     const listItem = document.createElement('li');
@@ -101,7 +138,7 @@ class GalleryRenderer {
     link.append(imageRenderer.render());
     link.append(this._generateDescription(image));
     listItem.appendChild(link);
-    this._galleryElement.appendChild(listItem);
+    return listItem;
   }
 
   /**
@@ -143,8 +180,14 @@ class GalleryRenderer {
     if (!this._parentElement) {
       throw new Error(`Parent element ${this._parentElement} not found`);
     }
+    // Append the gallery to the parent element if it doesn't already exist
+    if (!this._parentElement.contains(this._galleryElement)) {
+      this._parentElement.appendChild(this._galleryElement);
+    }
 
-    this._parentElement.appendChild(this._galleryElement);
+    if (this._moreButton) {
+      this._parentElement.appendChild(this._moreButton);
+    }
   }
 
   /**

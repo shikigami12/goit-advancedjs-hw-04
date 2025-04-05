@@ -99,22 +99,28 @@
   cursor: pointer;
 }
 
+.load-more:hover,
 .search-form button:hover {
   background: #6C8CFF;
 }
 
-.gallery {
+div.gallery {
   width: 1128px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
 }
 
-.gallery ul.gallery {
+ul.gallery {
   display: flex;
   flex-direction: row;
   gap: 24px;
   flex-wrap: wrap;
+  margin-bottom: 32px;
 }
 
-.gallery ul.gallery li {
+ul.gallery li {
   width: 360px;
   height: 200px;
   flex-shrink: 0;
@@ -123,18 +129,18 @@
   overflow: hidden;
 }
 
-.gallery ul.gallery li img {
+ul.gallery li img {
   width: 360px;
   height: 152px;
 }
 
-.gallery ul.gallery li a table {
+ul.gallery li a table {
   width: 360px;
   height: 48px;
   text-align: center;
 }
 
-.gallery ul.gallery li a table tr th {
+ul.gallery li a table tr th {
   color: #2E2F42;
   font-family: Montserrat, sans-serif;
   font-size: 12px;
@@ -144,7 +150,7 @@
   letter-spacing: 0.48px;
 }
 
-.gallery ul.gallery li a table tr td {
+ul.gallery li a table tr td {
   font-family: Montserrat, sans-serif;
   color: #2E2F42;
   font-size: 12px;
@@ -154,7 +160,36 @@
   letter-spacing: 0.48px;
 }
 
-.gallery ul.gallery li a {
+ul.gallery li a {
   text-decoration: none;
+}
+
+.load-more {
+  color: #FFF;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5; /* 150% */
+  letter-spacing: 0.64px;
+  gap: 10px;
+  border-radius: 8px;
+  background: #4E75FF;
+  width: 125px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  margin: 0 auto 44px;
+}
+
+.no-more {
+  color: #2E2F42;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5; /* 150% */
+  letter-spacing: 0.64px;
+  margin: 0 auto 60px;
 }
 
